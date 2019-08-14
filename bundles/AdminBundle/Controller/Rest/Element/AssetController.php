@@ -72,7 +72,12 @@ class AssetController extends AbstractElementController
                 /** @var Asset\Image $asset */
                 $checksum = $asset->getThumbnail($thumbnailConfig)->getChecksum($algo);
 
-                $object->thumbnail = (string) $asset->getThumbnail($thumbnailConfig);
+                $object->data = base64_encode(file_get_contents($asset->getThumbnail($thumbnailConfig)->getFileSystemPath()));
+                $object->filename = basename($asset->getThumbnail($thumbnailConfig)->getFileSystemPath());
+                $object->mimetype = mime_content_type($asset->getThumbnail($thumbnailConfig)->getFileSystemPath());
+                $object->thumbnail = (string)$asset->getThumbnail($thumbnailConfig, false);
+                $object->path = dirname($object->thumbnail) . DIRECTORY_SEPARATOR;
+
             } else {
                 $checksum = $asset->getChecksum($algo);
             }
